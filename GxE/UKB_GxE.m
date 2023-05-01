@@ -3,7 +3,7 @@
 clear SNP_Cardio_int_P SNP_Cardio_int_T SNP_Cardio_int_SE SNP_P
 SNP_Cardio_int_P=zeros(360, 22); SNP_Cardio_int_P(SNP_Cardio_int_P==0)=NaN;
 SNP_Dep_int_P=zeros(360, 22); SNP_Dep_int_P(SNP_Dep_int_P==0)=NaN;
-for i=1:360%[2:34, 36:68]%38:68
+for i=1:360%
     %tmp=sortrows(unique(allsnps.rsID(allsnps.TraitNum==1)));
     tmp=sortrows(unique(allsnps.rsID(allsnps.TraitNum<100)));
     for j=1:length(tmp); ixx(:,j)=~cellfun('isempty',strfind(CT_SNPs.Properties.VariableNames, tmp{j})); end; ixx=sum(ixx')';
