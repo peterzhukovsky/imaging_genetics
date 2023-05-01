@@ -1,0 +1,56 @@
+module load bio/PLINK2
+module load bio/PLINK/1.9b_6.15-x86_64
+#plink --file CT_stats.txt --clump CT_clumped.assoc 
+
+export MDIR=/external/rprshnas01/kcni/mwainberg
+
+cd /external/rprshnas01/tigrlab/scratch/pzhukovsky/biobank/genetics/EURnonWB/METAL/CLUMPING
+plink \
+--bfile $MDIR/ukb/genomics/genomic_data_imp/pgen_white/hardcalls/all_chromosomes \
+--clump-p1 1 \
+--clump-r2 0.4 \
+--clump-kb 300 \
+--clump CT_stats.txt \
+--clump-snp-field SNP \
+--clump-field P \
+--out CT_clumped.assoc \
+--keep $SCRATCH/biobank/genetics/samples_to_extract_snps.txt \
+--threads 12 
+ 
+ 
+ plink \
+--bfile $MDIR/ukb/genomics/genomic_data_imp/pgen_white/hardcalls/all_chromosomes \
+--clump-p1 1 \
+--clump-r2 0.4 \
+--clump-kb 300 \
+--clump CT_stats.txt \
+--clump-snp-field SNP \
+--clump-field P \
+--out CT_clumped.assoc.0.4 \
+--keep $SCRATCH/biobank/genetics/samples_to_extract_snps.txt \
+--threads 12 
+ 
+plink \
+--bfile $MDIR/ukb/genomics/genomic_data_imp/pgen_white/hardcalls/all_chromosomes \
+--clump-p1 1 \
+--clump-r2 0.4 \
+--clump-kb 300 \
+--clump CT_cardioInt_stats.txt \
+--clump-snp-field SNP \
+--clump-field P \
+--out CT_cardioInt_clumped.assoc.0.4 \
+--keep $SCRATCH/biobank/genetics/samples_to_extract_snps.txt \
+--threads 12 
+ 
+ plink \
+--bfile $MDIR/ukb/genomics/genomic_data_imp/pgen_white/hardcalls/all_chromosomes \
+--clump-p1 1 \
+--clump-r2 0.4 \
+--clump-kb 300 \
+--clump CT_CardioProperInt_stats.txt \
+--clump-snp-field SNP \
+--clump-field P \
+--out CT_CardioProperInt_clumped.assoc.0.4 \
+--keep $SCRATCH/biobank/genetics/samples_to_extract_snps.txt \
+--threads 12 
+
