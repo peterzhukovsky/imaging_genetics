@@ -7,7 +7,7 @@ GWAS analyses, follow-up clumping and GO scripts are located in the GWAS folder
 # Genetic correlations
 The LDSC folder contains the scripts used in genetic correlation analyses
 
-# GxE
+# Gene x Environment interactions
 Gene by environment interaction scripts are contained in the GxE folder
 
 # ROSMAP
