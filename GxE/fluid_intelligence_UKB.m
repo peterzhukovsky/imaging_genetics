@@ -59,3 +59,5 @@ end
 a=ancestries;
 ancestries(ancestries.eid==0,:)=[];
 % save ancestries
+
+
