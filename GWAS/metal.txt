@@ -1,0 +1,32 @@
+#THIS SCRIPT EXECUTES AN ANALYSIS OF 2 STUDIES
+#THE RESULTS FOR EACH STUDY ARE STORED IN FILES /external/rprshnas01/tigrlab/scratch/pzhukovsky/biobank/genetics/EURnonWB/WB/CT/1/allstats_1_22X.txt THROUGH /external/rprshnas01/tigrlab/scratch/pzhukovsky/biobank/genetics/EURnonWB/EUR/CT/1/allstats_1_22X.txt
+
+#LOAD THE TWO INPUT FILES
+
+# UNCOMMENT THE NEXT LINE TO ENABLE GenomicControl CORRECTION
+# GENOMICCONTROL ON
+
+# === DESCRIBE AND PROCESS THE FIRST INPUT FILE ===
+MARKER ID
+ALLELE REF A1
+EFFECT BETA
+PVALUE P 
+WEIGHT OBS_CT
+PROCESS /external/rprshnas01/tigrlab/scratch/pzhukovsky/biobank/genetics/EURnonWB/WB/CT/X_roi_X/allstats_1_22X.txt
+
+# === DESCRIBE AND PROCESS THE THIRD INPUT FILE ===
+MARKER ID
+ALLELE REF A1
+EFFECT BETA
+PVALUE P 
+WEIGHT OBS_CT
+PROCESS /external/rprshnas01/tigrlab/scratch/pzhukovsky/biobank/genetics/EURnonWB/EUR/CT/X_roi_X/allstats_1_22X.txt
+
+#for the final meta-analysis of all 8 samples only output results if the
+#combined weight is greater than 10000 people
+
+OUTFILE METAANALYSIS_CTX_roi_X_WB_EUR_ .txt
+MINWEIGHT 10000
+ANALYZE 
+
+QUIT
