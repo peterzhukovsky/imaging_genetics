@@ -10,3 +10,6 @@ The LDSC folder contains the scripts used in genetic correlation analyses
 # GxE
 Gene by environment interaction scripts are contained in the GxE folder
 
+# ROSMAP
+Transcriptomic analyses testing for the association between gene expression and cortical thickness and SNP association analyses trying to replicate some GWAS results are found in the ROSMAP folder
+
