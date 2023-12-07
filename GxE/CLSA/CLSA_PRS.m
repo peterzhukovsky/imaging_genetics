@@ -47,11 +47,11 @@ clear snp_*
 for i=1:33; i
     T=table(clsa_joint.CCC_HBP_COM, clsa_joint.DEP, clsa_joint.entity_id,clsa_joint.COG_CONSTR_EF4_COM,clsa_joint.AGE_NMBR_COM,clsa_joint.ED_UDR11_COM,clsa_joint.SEX_ASK_COM, clsa_snps.PC1,clsa_snps.PC2,clsa_snps.PC3,clsa_snps.PC4,clsa_snps.PC5,clsa_snps.PC6,clsa_snps.PC7,clsa_snps.PC8,clsa_snps.PC9,clsa_snps.PC10, (prs_thick(:,i)),...
         'VariableNames', {'hypert', 'DEP', 'entity_id_clsa_long','COG_REYII_SCORE','AGE_BL','ED_UDR11','SEX_ASK','PC1','PC2','PC3','PC4','PC5','PC6','PC7','PC8','PC9','PC10','SNP'});
-    mdl=fitlm(T, 'COG_REYII_SCORE ~ SNP+ AGE_BL + ED_UDR11 + SEX_ASK + PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10');
+    mdl=fitlm(T, 'COG_REYII_SCORE ~ SNP+ AGE_BL + ED_UDR11 + SEX_ASK +SEX_ASK*AGE_BL+ PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10');
     snp_stats_main(i,:)=mdl.Coefficients(strcmp(mdl.Coefficients.Properties.RowNames,'SNP'),:);
-    mdl=fitlm(T, 'COG_REYII_SCORE ~ SNP*hypert+ AGE_BL + ED_UDR11 + SEX_ASK+ PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10');%+ PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10
+    mdl=fitlm(T, 'COG_REYII_SCORE ~ SNP*hypert+ AGE_BL + ED_UDR11 + SEX_ASK+SEX_ASK*AGE_BL+ PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10');%+ PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10
     snp_stats_int(i,:)=mdl.Coefficients(strcmp(mdl.Coefficients.Properties.RowNames,'hypert:SNP'),:);
-    mdl=fitlm(T, 'COG_REYII_SCORE ~ SNP*DEP+ AGE_BL + ED_UDR11 + SEX_ASK  + PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10');
+    mdl=fitlm(T, 'COG_REYII_SCORE ~ SNP*DEP+ AGE_BL + ED_UDR11 + SEX_ASK + SEX_ASK*AGE_BL  + PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10');
     snp_stats_int_DEP(i,:)=mdl.Coefficients(strcmp(mdl.Coefficients.Properties.RowNames,'DEP_1:SNP'),:);
 end
 
@@ -84,22 +84,6 @@ figure; X=prs_thick(:,i); Y=clsa_joint.COG_CONSTR_MEM_COM;  %scatter(X,Y);lsline
 m=fitlm(X,Y);  [ypred,ci] = predict(m,X);hold on; plot(X,ypred,'k-','LineWidth',3); hold on; tmp=[X, ci]; tmp=sortrows(tmp,1); plot(tmp(:,1),tmp(:,2:3),'k-','LineWidth',1);
 figure; X=clsa_joint.ED_UDR11_COM; Y=clsa_joint.COG_CONSTR_MEM_COM; %scatter(X,Y);lsline;
 m=fitlm(X,Y);  [ypred,ci] = predict(m,X);hold on; plot(X,ypred,'k-','LineWidth',3); hold on; tmp=[X, ci]; tmp=sortrows(tmp,1); plot(tmp(:,1),tmp(:,2:3),'k-','LineWidth',1);
-
-
-for i=1:33; i
-    T=table(clsa_joint.CCC_HBP_COM, clsa_joint.DEP, clsa_joint.entity_id,clsa_joint.COG_REYII_SCORE_COM,clsa_joint.AGE_NMBR_COM,clsa_joint.ED_UDR11_COM,clsa_joint.SEX_ASK_COM, clsa_snps.PC1,clsa_snps.PC2,clsa_snps.PC3,clsa_snps.PC4,clsa_snps.PC5,clsa_snps.PC6,clsa_snps.PC7,clsa_snps.PC8,clsa_snps.PC9,clsa_snps.PC10, (prs_thick(:,i)),...
-        'VariableNames', {'hypert', 'DEP', 'entity_id_clsa_long','COG_REYII_SCORE','AGE_BL','ED_UDR11','SEX_ASK','PC1','PC2','PC3','PC4','PC5','PC6','PC7','PC8','PC9','PC10','SNP'});
-    mdl=fitlm(T, 'COG_REYII_SCORE ~ SNP + AGE_BL + ED_UDR11 + SEX_ASK');
-    snp_stats_main(i,:)=mdl.Coefficients(strcmp(mdl.Coefficients.Properties.RowNames,'SNP'),:);
-    mdl=fitlm(T, 'COG_REYII_SCORE ~ SNP*hypert + AGE_BL+ED_UDR11+SEX_ASK');
-    snp_stats_int(i,:)=mdl.Coefficients(strcmp(mdl.Coefficients.Properties.RowNames,'hypert:SNP'),:);
-    mdl=fitlm(T, 'COG_REYII_SCORE ~ SNP*DEP + AGE_BL+ED_UDR11+SEX_ASK');
-    snp_stats_int_DEP(i,:)=mdl.Coefficients(strcmp(mdl.Coefficients.Properties.RowNames,'DEP_1:SNP'),:);
-end
-regions_short(snp_stats_main.pValue<0.0017)
-regions_short(snp_stats_int.pValue<0.05)
-regions_short(snp_stats_int_DEP.pValue<0.01)
-
 
 %% viz PRS interactions and main effects!
 i=30 %1 5 19 30
