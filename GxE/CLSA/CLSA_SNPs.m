@@ -30,7 +30,7 @@ for i=1:215; i
     snp_stats_int_DEP(i,:)=mdl.Coefficients(strcmp(mdl.Coefficients.Properties.RowNames,'DEP_1:SNP'),:);
 end
 
-snp_stats_main.pfdr=mafdr(snp_stats_main.pValue, 'BHFDR', 'false')
+snp_stats_main.pfdr=mafdr(snp_stats_main.pValue, 'BHFDR', 'true')
 snp_stats_main.snp_names=clsa_joint.Properties.VariableNames(63:63+214)';
 snp_stats_int.snp_names=clsa_joint.Properties.VariableNames(63:63+214)';
 thresh=0.01
