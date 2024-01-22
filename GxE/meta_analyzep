@@ -1,0 +1,11 @@
+function [stoufferp, fisherp]=meta_analyzep(pvals)
+%pvals: 1-D vector of p-values
+    %%%Stouffer
+    pvals(isnan(pvals))=[];
+    p2z=norminv(pvals);
+    z=sum(p2z)/sqrt(length(pvals));
+    stoufferp=2*normcdf(z);
+    %%%Fisher
+    chisq=-2*sum(log(pvals)); dof=2*length(pvals);
+    fisherp=1-chi2cdf(chisq,dof);%relies on chi square functions
+    if isempty(pvals); fisherp=NaN; end
