@@ -94,7 +94,7 @@ figure(1); errorbar(means,3.291.*predci); hold off
 pred=mdl.predict; figure(1);violinplot(pred(T.Dep==0), T.APOE(T.Dep==0)); %ylim([2.5 2.8]); 
 figure(2);violinplot(pred(T.Dep==1), T.APOE(T.Dep==1)); %ylim([2.5 2.8]);
 
-%%
+%% using the interaction brain maps derived above, average CT in the p<0.01 regions and run interactions on it
 tmp=sortrows(unique(allsnps.rsID(allsnps.TraitNum<100)));
 for j=1:length(tmp); ixx(:,j)=~cellfun('isempty',strfind(CT_SNPs.Properties.VariableNames, tmp{j})); end; ixx=sum(ixx')';
 snps=CT_SNPs(:,ixx'==1);
@@ -102,9 +102,13 @@ snps=CT_SNPs(:,ixx'==1);
 for snp=1:length(snps.Properties.VariableNames)
     fdr=mafdr(SNP_Cardio_int_P(:,snp), 'BHFDR', 'true');    %label_names_all(fdr<0.1)
     fdr2=mafdr(SNP_Dep_int_P(:,snp), 'BHFDR', 'true');    %label_names_all(fdr<0.1)
-
+    fdr=SNP_Cardio_int_P(:,snp);
+    fdr2=SNP_Dep_int_P(:,snp);
+    if sum(fdr<0.1)==0; fdr=zeros(1,360); end
+    if sum(fdr2<0.1)==0; fdr2=zeros(1,360); end
+ 
     try
-    Outcome=nanmean(ct_ordered(:,fdr<0.1)')'; APOE=snps(:, snp);APOE=round(APOE{:,1});APOE(CT_SNPs.FID==0)=NaN;
+    Outcome=nanmean(ct_ordered(:,fdr<0.01)')'; APOE=snps(:, snp);APOE=round(APOE{:,1});APOE(CT_SNPs.FID==0)=NaN;
     ix= AD_ordered.eid==0 |  ~strcmp(ancestries_ordered.pop,'EUR'); %  isnan(whitebritish_ordered); %
     T=table(APOE, PHQ2, age, sex, Hearing, HRT, AD_ordered.x6138_0_0, minimal_ordered.x25741_2_0, AD_ordered.x3581_0_0,AD_ordered.x20416_0_0, physical_ordered.x21001_2_0 ,physical_ordered.x6150_0_0,AD_ordered.x22506_0_0,minimal_ordered.x54_2_0, TIV,PCAs(:,1),PCAs(:,2),PCAs(:,3),PCAs(:,4),PCAs(:,5),PCAs(:,6),PCAs(:,7),PCAs(:,8),PCAs(:,9),PCAs(:,10),Outcome, 'VariableNames', {'APOE','Dep' ,'age', 'sex', 'Hearing', 'HRT', 'Education', 'HMotion','AgeLastPeriod', 'AlcFreq', 'BMI', 'cardio','tobacco','site', 'TIV','PC1','PC2','PC3','PC4','PC5','PC6','PC7','PC8','PC9','PC10', 'Outcome'}); T( ix,:)=[];%dep: strcmp(clinical, 'dep')' 
     mdl = fitlm(T,'Outcome~APOE*cardio+sex+age+site+age*sex+TIV+age^2+PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10'); %HMotion
@@ -120,7 +124,7 @@ for snp=1:length(snps.Properties.VariableNames)
     
          
     try
-    Outcome=nanmean(ct_ordered(:,fdr2<0.1)')'; APOE=snps(:, snp);APOE=round(APOE{:,1});APOE(CT_SNPs.FID==0)=NaN;
+    Outcome=nanmean(ct_ordered(:,fdr2<0.01)')'; APOE=snps(:, snp);APOE=round(APOE{:,1});APOE(CT_SNPs.FID==0)=NaN;
     ix= AD_ordered.eid==0 |  ~strcmp(ancestries_ordered.pop,'EUR'); %  isnan(whitebritish_ordered); %
     T=table(APOE, PHQ2, age, sex, Hearing, HRT, AD_ordered.x6138_0_0, minimal_ordered.x25741_2_0, AD_ordered.x3581_0_0,AD_ordered.x20416_0_0, physical_ordered.x21001_2_0 ,physical_ordered.x6150_0_0,AD_ordered.x22506_0_0,minimal_ordered.x54_2_0, TIV,PCAs(:,1),PCAs(:,2),PCAs(:,3),PCAs(:,4),PCAs(:,5),PCAs(:,6),PCAs(:,7),PCAs(:,8),PCAs(:,9),PCAs(:,10),Outcome, 'VariableNames', {'APOE','Dep' ,'age', 'sex', 'Hearing', 'HRT', 'Education', 'HMotion','AgeLastPeriod', 'AlcFreq', 'BMI', 'cardio','tobacco','site', 'TIV','PC1','PC2','PC3','PC4','PC5','PC6','PC7','PC8','PC9','PC10', 'Outcome'}); T( ix,:)=[];%dep: strcmp(clinical, 'dep')' 
     mdl = fitlm(T,'Outcome~APOE*Dep+sex+age+site+age*sex+TIV+age^2+PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10'); %HMotion
@@ -135,17 +139,21 @@ for snp=1:length(snps.Properties.VariableNames)
 end;end
 
 figure;histogram(log10(SNP_Comb_Cardio_int_P), 8)
-snps.Properties.VariableNames(SNP_Comb_Cardio_int_P<0.05/220)
+snps.Properties.VariableNames(SNP_Comb_Cardio_int_P<0.05/220/18.056)
 figure;histogram(log10(SNP_Comb_Dep_int_P), 8)
-snps.Properties.VariableNames(SNP_Comb_Dep_int_P<0.05/220)
+snps.Properties.VariableNames(SNP_Comb_Dep_int_P<0.05/220/18.056)
 SNP_Comb_Dep_int_P(SNP_Comb_Dep_int_P<0.05/220)
+snps.Properties.VariableNames(SNP_Comb_Dep_int_P<0.05/220/18 & SNP_Comb_Cardio_int_P<0.05/220/18 )
         %plot all snps with sign interactions for cardio
-figure;imagesc((log10(SNP_Comb_Cardio_int_P(SNP_Comb_Cardio_int_P<0.05/220)))); colormap bone; 
-set(gca, 'XTick', (1:length(SNP_Comb_Cardio_int_P<0.05/220)), 'XTickLabel', snps.Properties.VariableNames(SNP_Comb_Cardio_int_P<0.05/220), 'XTickLabelRotation',90);
+figure;imagesc((log10(SNP_Comb_Cardio_int_P(SNP_Comb_Cardio_int_P<0.05/220/18)))); colormap bone; 
+set(gca, 'XTick', (1:length(SNP_Comb_Cardio_int_P<0.05/220)), 'XTickLabel', snps.Properties.VariableNames(SNP_Comb_Cardio_int_P<0.05/220/18), 'XTickLabelRotation',90);
 rosmapSNP_Comb_Cardio_int_P=[0.1	0.1	0.1	0.0006	0.1	0.1	0.0137	0.0034	0.0106	0.1	0.0152	0.1	0.0011	0.018	0.018	0.018	0.018	0.1	0.003	0.0006	0.1	0.0206	0.0007	0.1];
 figure;imagesc(log10(rosmapSNP_Comb_Cardio_int_P)); colormap bone; 
         %plot all snps with sign interactions for Dep
-figure;imagesc((log10(SNP_Comb_Dep_int_P(SNP_Comb_Dep_int_P<0.05/220)))); colormap bone; set(gca, 'XTick', (1:length(SNP_Comb_Dep_int_P<0.05/220)), 'XTickLabel', snps.Properties.VariableNames(SNP_Comb_Cardio_int_P<0.05/220), 'XTickLabelRotation',90);
+figure;imagesc((log10(SNP_Comb_Dep_int_P(SNP_Comb_Dep_int_P<0.05/220/18)))); colormap bone; set(gca, 'XTick', (1:length(SNP_Comb_Dep_int_P<0.05/220/18)), 'XTickLabel', snps.Properties.VariableNames(SNP_Comb_Dep_int_P<0.05/220/18), 'XTickLabelRotation',90);
+%%%%nr of effective comparisons
+[coef, scores, latent]=pca(ct_ordered);
+(sum(latent))^2/sum(latent.^2)
 
 %%% plotting the t-stats for each subgroup individually
 for snp=1:length(snps.Properties.VariableNames)
