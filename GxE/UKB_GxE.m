@@ -61,6 +61,8 @@ mdl
 r1=mdl.Rsquared.Ordinary;
 mdl = fitlm(T,'Outcome~APOE+cardio+sex+age+site+age*sex+TIV+age^2+PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10'); %HMotion
 (r1-mdl.Rsquared.Ordinary)*100
+mdl = fitlm(T,'Outcome~cardio+sex+age+site+age*sex+TIV+age^2+PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10')
+(r1-mdl.Rsquared.Ordinary)*100
 
 %figure;plotInteraction(mdl,'cardio','APOE','predictions'); ylabel('Cortical Thickness'); %scatter(T.APOE(T.cardio==0), T.Outcome(T.cardio==0),2, 'filled', 'r'); hold on; scatter(T.APOE(T.cardio==1), T.Outcome(T.cardio==1),2, 'filled', 'b');
 pred=mdl.predict;
