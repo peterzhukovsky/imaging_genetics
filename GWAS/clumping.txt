@@ -4,34 +4,21 @@ module load bio/PLINK/1.9b_6.15-x86_64
 
 export MDIR=/external/rprshnas01/kcni/mwainberg
 
-cd /external/rprshnas01/tigrlab/scratch/pzhukovsky/biobank/genetics/EURnonWB/METAL/CLUMPING
+# instead of ukb lets use 1000g as ref panel for clumping https://dougspeed.com/1000-genomes-project/
+ #$MDIR/ukb/genomics/genomic_data_imp/pgen_white/hardcalls/all_chromosomes \
+ $MDIR/ukb/genomics/genomic_data_imp/ukb_imp_chr17_v3 \
 plink \
---bfile $MDIR/ukb/genomics/genomic_data_imp/pgen_white/hardcalls/all_chromosomes \
+--bfile g1000_eur \
 --clump-p1 1 \
 --clump-r2 0.4 \
---clump-kb 300 \
 --clump CT_stats.txt \
 --clump-snp-field SNP \
 --clump-field P \
---out CT_clumped.assoc \
---keep $SCRATCH/biobank/genetics/samples_to_extract_snps.txt \
---threads 12 
- 
- 
- plink \
---bfile $MDIR/ukb/genomics/genomic_data_imp/pgen_white/hardcalls/all_chromosomes \
---clump-p1 1 \
---clump-r2 0.4 \
---clump-kb 300 \
---clump CT_stats.txt \
---clump-snp-field SNP \
---clump-field P \
---out CT_clumped.assoc.0.4 \
---keep $SCRATCH/biobank/genetics/samples_to_extract_snps.txt \
---threads 12 
- 
+--out CT_clumped.assoc.0.4.redo \
+--threads 12
+
 plink \
---bfile $MDIR/ukb/genomics/genomic_data_imp/pgen_white/hardcalls/all_chromosomes \
+--bfile g1000_eur \
 --clump-p1 1 \
 --clump-r2 0.4 \
 --clump-kb 300 \
@@ -39,18 +26,19 @@ plink \
 --clump-snp-field SNP \
 --clump-field P \
 --out CT_cardioInt_clumped.assoc.0.4 \
---keep $SCRATCH/biobank/genetics/samples_to_extract_snps.txt \
---threads 12 
- 
- plink \
---bfile $MDIR/ukb/genomics/genomic_data_imp/pgen_white/hardcalls/all_chromosomes \
+--threads 12
+#--keep $SCRATCH/biobank/genetics/samples_to_extract_snps.txt \
+
+plink \
+--bfile g1000_eur \
 --clump-p1 1 \
 --clump-r2 0.4 \
 --clump-kb 300 \
---clump CT_CardioProperInt_stats.txt \
+--clump CT_DeprInt_stats.txt \
 --clump-snp-field SNP \
 --clump-field P \
---out CT_CardioProperInt_clumped.assoc.0.4 \
---keep $SCRATCH/biobank/genetics/samples_to_extract_snps.txt \
---threads 12 
+--out CT_DeprInt_clumped.assoc.0.4 \
+--threads 12
+
+
 
